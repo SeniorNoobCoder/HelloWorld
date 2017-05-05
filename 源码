@@ -1,0 +1,139 @@
+package com.tintinloan.controller.mphone;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.tintinloan.bean.MsgVo;
+import com.tintinloan.bean.user.UserLoginInfoVo;
+import com.tintinloan.controller.BaseController;
+import com.tintinloan.enumtype.SmsCodeTradeTypeEnum;
+import com.tintinloan.enumtype.VisitWayEnum;
+import com.tintinloan.service.user.IUserLoginInfoService;
+import com.tintinloan.util.SmsCodeUtils;
+
+@Controller
+@RequestMapping("/mphoneLogin")
+public class MphoneLoginController extends BaseController {
+
+	@Autowired
+	private IUserLoginInfoService userLoginInfoService;
+	@Autowired
+	private IUserLoginInfoService loginInfoService;
+	/** 登录 */
+	/**
+	 * 用户登录
+	 * 
+	 * @param user
+	 * @param session
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/loginUser")
+	public @ResponseBody
+	MsgVo loginUser(final UserLoginInfoVo user, final HttpSession session,
+			final HttpServletRequest request, final HttpServletResponse response) {
+		// 审核用户登录信息,更新登录记录表信息
+
+		MsgVo msgVo = userLoginInfoService.logInfoCheck(user, request,
+				response, "1", VisitWayEnum.VISIT_WAP.getCode());
+		// 用户登陆后，首页弹窗只弹出一次
+		session.setAttribute("showQianDai", "1");
+		return msgVo;
+	}
+	
+	/**
+	 * 跳转到找回密码页面
+	 * @param session
+	 * @param request
+	 * @return
+	 * @author lp
+	 */
+	@RequestMapping("/findPassword")
+	public String findPassword(final HttpSession session,
+			final HttpServletRequest request) {
+		return "mphone/findpassword";
+	}
+	
+//	/**
+//	 * 忘记密码 发送邮箱或手机验证码
+//	 * 
+//	 * @param session
+//	 * @param phoneOrMail
+//	 * @param imagemCode
+//	 * @return
+//	 */
+//	@ResponseBody
+//	@RequestMapping("/sendPhoneOrMailSms")
+//	public MsgVo sendPhoneOrMailSms(final HttpSession session,
+//			final String phoneOrMail) {
+//		// 手机号不为空
+//		if (StringUtils.hasText(phoneOrMail)) {
+//			// 手机验证码模板return：随机数、userName; params:session、业务类别2、手机号
+//			String params = SmsCodeUtils.smsCodeTemplate(session,
+//					SmsCodeTradeTypeEnum.FOTGET_PASSWORD.getCode(), phoneOrMail);
+//			if (phoneOrMail != null && phoneOrMail.contains("@")) {
+//				// 邮箱发送文本
+//				final String context = "<div id='mailContentContainer'><p>您好！您的邮箱验证码是："
+//						+ params.get("randomNum").toString() + "" + "</p>";
+//				// 调用发送邮件接口
+//				EmailUtil.sendVerfgCodeMail(null, phoneOrMail, context);
+//				return new MsgVo("200", "验证码已经发送到邮箱，请注意查收！");
+//			} else {
+//				// 发送手机验证码
+//				MsgVo msgVo = JzSmsUtil.newSendVerCodeSms(phoneOrMail, params
+//						.get("userName").toString(), params.get("randomNum")
+//						.toString());
+//				return msgVo;
+//			}
+//		}
+//		return new MsgVo("500", "邮箱或手机信息有误 ！");
+//	}
+	
+	/** 忘记密码 */
+	/**
+	 * @Description: 检查邮箱或手机是否存在
+	 * @param param
+	 *            手机或邮箱
+	 * @return MsgVo 返回类型
+	 */
+	@ResponseBody
+	@RequestMapping("/checkPhoneOrMail")
+	public boolean checkPhoneOrMail(final String param, final HttpSession session) {
+		return loginInfoService.checkPhone(param);
+	}
+	
+	/**
+	 * 忘记密码 手机/邮箱验证码校验
+	 * 
+	 * @param userLoginInfoVo
+	 *            包含邮箱地址/手机号,验证码
+	 * @param session
+	 * @return
+	 */
+
+	@RequestMapping("/checkPhoneCodeWJ")
+	public @ResponseBody
+	MsgVo checkPhoneCodeWJ(@RequestBody final UserLoginInfoVo vo,
+			final HttpServletRequest request) {
+		// 判断条件是验证码不为空、并且手机号/邮箱地址不为空,统一的验证方法
+		if (StringUtils.hasText(vo.getPhone())
+				&& StringUtils.hasText(vo.getPhonecode())) {
+			// 验证手机号验证码是否，params:session、业务类别2、手机号、验证码
+			MsgVo msgVo = SmsCodeUtils.isCorrectByCode(request,
+					SmsCodeTradeTypeEnum.FOTGET_PASSWORD.getCode(),
+					vo.getPhone(), vo.getPhonecode());
+			return msgVo;
+		}
+		return new MsgVo("500", "验证码有误");
+
+	}
+	
+}

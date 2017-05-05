@@ -1,11 +1,14 @@
 # HelloWorld
+
 # this is a new project,  its my first file in git, keep going!
 
-## 小试牛刀
+## little try
   
-  - 随笔博文
+  - notes and blog
   
   - MarkDown in Study、GitHub
+  
+  
 ### the Java Coder
   
 #### what can i do ?

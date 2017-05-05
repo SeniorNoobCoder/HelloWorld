@@ -1,13 +1,14 @@
-# realife
+# HelloWorld
 # this is a new project,  its my first file in git, keep going!
 
-## this is a title
-  - this is a list
+## 小试牛刀
   
-  - MarkDown in Study
-### I'm a Java Coder
+  - 随笔博文
+  
+  - MarkDown in Study、GitHub
+### the Java Coder
   
 #### what can i do ?
-- JAVA
-- Spring
-- MVC
+- study
+- study
+- study

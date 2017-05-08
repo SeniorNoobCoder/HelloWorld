@@ -23,7 +23,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </head>
   
   <body>
-	  <h1>study and restudy，very happy</h1>
+	  <h1>study and reStudy，very happy</h1>
     <h1><p align="center">welcome  to  lp's first project</p></h1><br>
     <div>
     <img src="<%=basePath%>images/welcome.png"  alt="" style="width:100px;height: 200px;"/>

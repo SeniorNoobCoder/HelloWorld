@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<!-- mybatis下划线自动转驼峰 -->
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+	</settings>
+
+	<plugins>
+		<plugin interceptor="com.tintinloan.codelets.dao.pagination.PaginationInterceptor">
+			<property name="dialect" value="mysql" />
+		</plugin>
+		<!-- 暂无启用读写分离 -->
+		<!-- <plugin interceptor="com.tintinloan.dataSource.DynamicPlugin"></plugin> -->
+	</plugins>
+</configuration>

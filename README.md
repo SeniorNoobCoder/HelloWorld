@@ -16,4 +16,4 @@
 - study
 - study
 
-![Alt text](https://github.com/SeniorNoobCoder/HelloWorld/realife/master/Screenshots/liupeng.png)
+![Alt text](https://github.com/SeniorNoobCoder/HelloWorld/blob/master/realife/Screenshots/liupeng.png)
